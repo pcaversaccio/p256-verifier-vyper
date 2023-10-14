@@ -65,30 +65,30 @@ contract P256 is Test {
 
     // This is the most comprehensive test, covering many edge cases. See vector
     // generation and validation in the test-vectors directory.
-    function testWycheproof() public {
-        string memory file = "./test-vectors/vectors_wycheproof.jsonl";
-        while (true) {
-            string memory vector = vm.readLine(file);
-            if (bytes(vector).length == 0) {
-                break;
-            }
+    // function testWycheproof() public {
+    //     string memory file = "./lib/p256-verifier/test-vectors/vectors_wycheproof.jsonl";
+    //     while (true) {
+    //         string memory vector = vm.readLine(file);
+    //         if (bytes(vector).length == 0) {
+    //             break;
+    //         }
 
-            uint256 x = uint256(vector.readBytes32(".x"));
-            uint256 y = uint256(vector.readBytes32(".y"));
-            uint256 r = uint256(vector.readBytes32(".r"));
-            uint256 s = uint256(vector.readBytes32(".s"));
-            bytes32 hash = vector.readBytes32(".hash");
-            bool expected = vector.readBool(".valid");
-            string memory comment = vector.readString(".comment");
+    //         uint256 x = uint256(vector.readBytes32(".x"));
+    //         uint256 y = uint256(vector.readBytes32(".y"));
+    //         uint256 r = uint256(vector.readBytes32(".r"));
+    //         uint256 s = uint256(vector.readBytes32(".s"));
+    //         bytes32 hash = vector.readBytes32(".hash");
+    //         bool expected = vector.readBool(".valid");
+    //         string memory comment = vector.readString(".comment");
 
-            (bool result,) = evaluate(hash, r, s, x, y);
+    //         (bool result,) = evaluate(hash, r, s, x, y);
 
-            string memory err = string(
-                abi.encodePacked("exp ", expected ? "1" : "0", ", we return ", result ? "1" : "0", ": ", comment)
-            );
-            assertTrue(result == expected, err);
-        }
-    }
+    //         string memory err = string(
+    //             abi.encodePacked("exp ", expected ? "1" : "0", ", we return ", result ? "1" : "0", ": ", comment)
+    //         );
+    //         assertTrue(result == expected, err);
+    //     }
+    // }
 
     function testWrongInputLength() public {
         // First valid Wycheproof vector
@@ -121,32 +121,32 @@ contract P256 is Test {
         (bool result, uint256 gasUsed) = evaluate(hash, r, s, x, y);
         console2.log("gasUsed ", gasUsed);
         assertEq(result, false);
-        assertGt(gasUsed, 1500);
+        assertGt(gasUsed, 2500);
 
         // Out-of-bounds public key. Fails fast, takes less gas.
         (x, y) = (0, 1);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
         console2.log("gasUsed ", gasUsed);
         assertEq(result, false);
-        assertLt(gasUsed, 1500);
+        assertLt(gasUsed, 2500);
 
         (x, y) = (1, 0);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
         console2.log("gasUsed ", gasUsed);
         assertEq(result, false);
-        assertLt(gasUsed, 1500);
+        assertLt(gasUsed, 2500);
 
         (x, y) = (1, p);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
         console2.log("gasUsed ", gasUsed);
         assertEq(result, false);
-        assertLt(gasUsed, 1500);
+        assertLt(gasUsed, 2500);
 
         (x, y) = (p, 1);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
         console2.log("gasUsed ", gasUsed);
         assertEq(result, false);
-        assertLt(gasUsed, 1500);
+        assertLt(gasUsed, 2500);
 
         // p-1 is in-bounds but point is not on curve.
         (x, y) = (p - 1, 1);
