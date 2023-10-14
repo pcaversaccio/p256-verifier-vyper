@@ -5,3 +5,4 @@ out = 'out'                   # the output directory (for artifacts)
 libs = ['lib']                # a list of library directories
 cache = true                  # whether to cache builds or not
 cache_path = 'cache'          # where the cache is stored if enabled
+ffi = true                    # whether to enable foreign function interface (ffi) cheatcodes or not
