@@ -36,32 +36,32 @@ contract P256Verifier is Test {
         return (result == 1, gasUsed);
     }
 
-    /**
-     * @dev Sanity check. Demonstrate input and output handling.
-     */
-    function testBasic() public {
-        // Zero inputs.
-        bytes32 hash = bytes32(0);
-        (uint256 r, uint256 s, uint256 x, uint256 y) = (0, 0, 0, 0);
-        // (bool res, uint256 gasUsed) = evaluate(hash, r, s, x, y);
-        // console2.log("Zero inputs, gasUsed ", gasUsed);
-        // assertEq(res, false);
+    // /**
+    //  * @dev Sanity check. Demonstrate input and output handling.
+    //  */
+    // function testBasic() public {
+    //     // Zero inputs.
+    //     bytes32 hash = bytes32(0);
+    //     (uint256 r, uint256 s, uint256 x, uint256 y) = (0, 0, 0, 0);
+    //     (bool res, uint256 gasUsed) = evaluate(hash, r, s, x, y);
+    //     console2.log("Zero inputs, gasUsed ", gasUsed);
+    //     assertEq(res, false);
 
-        // // First valid Wycheproof vector.
-        // hash = 0xbb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023;
-        // r = 19738613187745101558623338726804762177711919211234071563652772152683725073944;
-        // s = 34753961278895633991577816754222591531863837041401341770838584739693604822390;
-        // x = 18614955573315897657680976650685450080931919913269223958732452353593824192568;
-        // y = 90223116347859880166570198725387569567414254547569925327988539833150573990206;
-        // (res, gasUsed) = evaluate(hash, r, s, x, y);
-        // console2.log("Valid signature, gasUsed ", gasUsed);
-        // assertEq(res, true);
+    //     // First valid Wycheproof vector.
+    //     hash = 0xbb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023;
+    //     r = 19738613187745101558623338726804762177711919211234071563652772152683725073944;
+    //     s = 34753961278895633991577816754222591531863837041401341770838584739693604822390;
+    //     x = 18614955573315897657680976650685450080931919913269223958732452353593824192568;
+    //     y = 90223116347859880166570198725387569567414254547569925327988539833150573990206;
+    //     (res, gasUsed) = evaluate(hash, r, s, x, y);
+    //     console2.log("Valid signature, gasUsed ", gasUsed);
+    //     assertEq(res, true);
 
-        // // Same as above, but off by 1.
-        // (res, gasUsed) = evaluate(hash, r, s, x + 1, y);
-        // console2.log("Invalid signature, gasUsed ", gasUsed);
-        // assertEq(res, false);
-    }
+    //     // Same as above, but off by 1.
+    //     (res, gasUsed) = evaluate(hash, r, s, x + 1, y);
+    //     console2.log("Invalid signature, gasUsed ", gasUsed);
+    //     assertEq(res, false);
+    // }
 
     // /**
     //  * @dev This is the most comprehensive test, covering many edge cases. See vector
@@ -111,49 +111,49 @@ contract P256Verifier is Test {
     //     assertTrue(success && res == bytes32(uint256(0)), "expected invalid");
     // }
 
-    // function testOutOfBounds() public {
-    //     // Curve prime field modulus.
-    //     uint256 p = 0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF;
+    function testOutOfBounds() public {
+        // Curve prime field modulus.
+        uint256 p = 0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF;
 
-    //     bytes32 hash = bytes32(0);
-    //     (uint256 r, uint256 s, uint256 x, uint256 y) = (1, 1, 1, 1);
+        bytes32 hash = bytes32(0);
+        (uint256 r, uint256 s, uint256 x, uint256 y) = (1, 1, 1, 1);
 
-    //     // In-bounds dummy key (1, 1).
-    //     // Calls modexp, which takes gas.
-    //     (bool result, uint256 gasUsed) = evaluate(hash, r, s, x, y);
-    //     console2.log("gasUsed ", gasUsed);
-    //     assertEq(result, false);
-    //     assertGt(gasUsed, 2500);
+        // In-bounds dummy key (1, 1).
+        // Calls modexp, which takes gas.
+        (bool result, uint256 gasUsed) = evaluate(hash, r, s, x, y);
+        console2.log("gasUsed ", gasUsed);
+        assertEq(result, false);
+        assertGt(gasUsed, 2500);
 
-    //     // Out-of-bounds public key. Fails fast, takes less gas.
-    //     (x, y) = (0, 1);
-    //     (result, gasUsed) = evaluate(hash, r, s, x, y);
-    //     console2.log("gasUsed ", gasUsed);
-    //     assertEq(result, false);
-    //     assertLt(gasUsed, 2500);
+        // Out-of-bounds public key. Fails fast, takes less gas.
+        (x, y) = (0, 1);
+        (result, gasUsed) = evaluate(hash, r, s, x, y);
+        console2.log("gasUsed ", gasUsed);
+        assertEq(result, false);
+        assertLt(gasUsed, 2500);
 
-    //     (x, y) = (1, 0);
-    //     (result, gasUsed) = evaluate(hash, r, s, x, y);
-    //     console2.log("gasUsed ", gasUsed);
-    //     assertEq(result, false);
-    //     assertLt(gasUsed, 2500);
+        (x, y) = (1, 0);
+        (result, gasUsed) = evaluate(hash, r, s, x, y);
+        console2.log("gasUsed ", gasUsed);
+        assertEq(result, false);
+        assertLt(gasUsed, 2500);
 
-    //     (x, y) = (1, p);
-    //     (result, gasUsed) = evaluate(hash, r, s, x, y);
-    //     console2.log("gasUsed ", gasUsed);
-    //     assertEq(result, false);
-    //     assertLt(gasUsed, 2500);
+        (x, y) = (1, p);
+        (result, gasUsed) = evaluate(hash, r, s, x, y);
+        console2.log("gasUsed ", gasUsed);
+        assertEq(result, false);
+        assertLt(gasUsed, 2500);
 
-    //     (x, y) = (p, 1);
-    //     (result, gasUsed) = evaluate(hash, r, s, x, y);
-    //     console2.log("gasUsed ", gasUsed);
-    //     assertEq(result, false);
-    //     assertLt(gasUsed, 2500);
+        (x, y) = (p, 1);
+        (result, gasUsed) = evaluate(hash, r, s, x, y);
+        console2.log("gasUsed ", gasUsed);
+        assertEq(result, false);
+        assertLt(gasUsed, 2500);
 
-    //     // p-1 is in-bounds but point is not on curve.
-    //     (x, y) = (p - 1, 1);
-    //     (result, gasUsed) = evaluate(hash, r, s, x, y);
-    //     console2.log("gasUsed ", gasUsed);
-    //     assertEq(result, false);
-    // }
+        // p-1 is in-bounds but point is not on curve.
+        (x, y) = (p - 1, 1);
+        (result, gasUsed) = evaluate(hash, r, s, x, y);
+        console2.log("gasUsed ", gasUsed);
+        assertEq(result, false);
+    }
 }
