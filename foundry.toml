@@ -1,5 +1,6 @@
 ## defaults for all profiles
 [profile.default]
+src = 'src'                                                 # the source directory
 test = 'test'                                               # the test directory
 out = 'out'                                                 # the output directory (for artifacts)
 libs = ['lib']                                              # a list of library directories
@@ -9,3 +10,8 @@ ffi = true                                                  # whether to enable 
 verbosity = 3                                               # the verbosity of tests
 fs_permissions = [{ access = "read-write", path = "./"}]    # set read-write access to project root
 evm_version = 'shanghai'                                    # set the EVM target version
+
+## default overrides for the CI runs
+[profile.ci]
+force = true                                                # always perform a clean build
+verbosity = 4                                               # increase the verbosity of tests
