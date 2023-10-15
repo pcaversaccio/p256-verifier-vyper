@@ -16,7 +16,7 @@ contract P256Verifier is Test {
     }
 
     function testHello() public {
-        assertEq(1, 1);
+        assertEq(uint256(1), uint256(1));
     }
 
     /**
