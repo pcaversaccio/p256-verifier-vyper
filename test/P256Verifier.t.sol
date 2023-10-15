@@ -15,26 +15,26 @@ contract P256Verifier is Test {
         p256Verifier = vyperDeployer.deployContract("src/", "P256Verifier");
     }
 
-    // /**
-    //  * @dev Checks a single test vector: signature rs, pubkey Q = (x,y).
-    //  */
-    // function evaluate(bytes32 hash, uint256 r, uint256 s, uint256 x, uint256 y)
-    //     private
-    //     returns (bool valid, uint256 gasUsed)
-    // {
-    //     bytes memory input = abi.encodePacked(hash, r, s, x, y);
+    /**
+     * @dev Checks a single test vector: signature rs, pubkey Q = (x,y).
+     */
+    function evaluate(bytes32 hash, uint256 r, uint256 s, uint256 x, uint256 y)
+        private
+        returns (bool valid, uint256 gasUsed)
+    {
+        bytes memory input = abi.encodePacked(hash, r, s, x, y);
 
-    //     uint256 gasBefore = gasleft();
-    //     (bool success, bytes memory res) = p256Verifier.staticcall(input);
-    //     gasUsed = gasBefore - gasleft();
+        uint256 gasBefore = gasleft();
+        (bool success, bytes memory res) = p256Verifier.staticcall(input);
+        gasUsed = gasBefore - gasleft();
 
-    //     assertEq(success, true, "call failed");
-    //     assertEq(res.length, 32, "invalid result length");
-    //     uint256 result = abi.decode(res, (uint256));
-    //     assertTrue(result == 1 || result == 0, "invalid result");
+        assertEq(success, true, "call failed");
+        assertEq(res.length, 32, "invalid result length");
+        uint256 result = abi.decode(res, (uint256));
+        assertTrue(result == 1 || result == 0, "invalid result");
 
-    //     return (result == 1, gasUsed);
-    // }
+        return (result == 1, gasUsed);
+    }
 
     // /**
     //  * @dev Sanity check. Demonstrate input and output handling.
