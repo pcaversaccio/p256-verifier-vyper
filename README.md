@@ -7,6 +7,8 @@
 
 P256 (a.k.a. secp256r1 elliptic curve) signature verification 🐍Vyper contract. These functions can be used to verify a P256 signature. The implementation is inspired by [dcposch](https://github.com/dcposch)'s and [nalinbhardwaj](https://github.com/nalinbhardwaj)'s implementation [here](https://github.com/daimo-eth/p256-verifier/blob/master/src/P256Verifier.sol). Also, for more technical details, please refer to [EIP-7212](https://eips.ethereum.org/EIPS/eip-7212).
 
+> This is **experimental software** and is provided on an "as is" and "as available" basis. We **do not give any warranties** and **will not be liable for any losses** incurred through any use of this code base.
+
 ## Deployments
 
 - Goerli: [`0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5`](https://goerli.etherscan.io/address/0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5)
