@@ -1,7 +1,7 @@
 # pragma version ^0.3.10
 """
 @title P256 Signature Verification Functions
-@custom:contract-name P256
+@custom:contract-name P256Verifier
 @license GNU Affero General Public License v3.0 only
 @author pcaversaccio
 @notice These functions can be used to verify a P256 (a.k.a. secp256r1 elliptic curve) signature.
@@ -115,9 +115,9 @@ def _ec_aff_is_valid_pubkey(x: uint256, y: uint256) -> bool:
 @internal
 @pure
 def _ec_aff_satisfies_curve_eqn(x: uint256, y: uint256) -> bool:
-    # y^2
+    # y^2.
     lhs: uint256 = uint256_mulmod(y, y, p)
-    # x^3 + a*x + b
+    # x^3 + a*x + b.
     rhs: uint256 = uint256_addmod(uint256_addmod(uint256_mulmod(uint256_mulmod(x, x, p), x, p), uint256_mulmod(a, x, p), p), b, p)
     return lhs == rhs
 
@@ -139,7 +139,7 @@ def _ec_zz_mulmuladd(QX: uint256, QY: uint256, scalar_u: uint256, scalar_v: uint
     if (scalar_u == empty(uint256) and scalar_v == empty(uint256)):
         return empty(uint256)
 
-    # H = g + Q
+    # H = g + Q.
     (HX, HY) = self._ec_aff_add(GX, GY, QX, QY)
 
     index: int256 = 255
@@ -148,6 +148,9 @@ def _ec_zz_mulmuladd(QX: uint256, QY: uint256, scalar_u: uint256, scalar_v: uint
     # Find the first bit index that is active in either `scalar_u` or `scalar_v`.
     for _ in range(255):
         bitpair = self._compute_bitpair(convert(index, uint256), scalar_u, scalar_v)
+        # The following line cannot negatively overflow because we have limited the
+        # for-loop by the constant value 255. The theoretically maximum achievable
+        # value is therefore `-1`.
         index = unsafe_sub(index, 1)
         if (bitpair != empty(uint256)):
             break
@@ -165,12 +168,15 @@ def _ec_zz_mulmuladd(QX: uint256, QY: uint256, scalar_u: uint256, scalar_v: uint
     TX: uint256 = empty(uint256)
     TY: uint256 = empty(uint256)
 
-    for _ in range(255):
+    for _ in range(min(index, 255), bound=255):
         if (index < empty(int256)):
             break
 
         (X, Y, zz, zzz) = self._ec_zz_double_zz(X, Y, zz, zzz)
         bitpair = self._compute_bitpair(convert(index, uint256), scalar_u, scalar_v)
+        # The following line cannot negatively overflow because we have limited the
+        # for-loop by the constant value 255. The theoretically maximum achievable
+        # value is therefore `-1`.
         index = unsafe_sub(index, 1)
 
         if (bitpair == empty(uint256)):
@@ -187,7 +193,9 @@ def _ec_zz_mulmuladd(QX: uint256, QY: uint256, scalar_u: uint256, scalar_v: uint
 
         (X, Y, zz, zzz) = self._ec_zz_dadd_affine(X, Y, zz, zzz, TX, TY)
 
+    # If `zz = 0`, `zzInv = 0`.
     zz_inv: uint256 = self._p_mod_inv(zz)
+    # X/zz.
     return uint256_mulmod(X, zz_inv, p)
 
 
@@ -199,9 +207,9 @@ def _compute_bitpair(index: uint256, scalar_u: uint256, scalar_v: uint256) -> ui
          concatenation. The bit at index 0 is on if the `index`th bit of `scalar_u`
          is on and the bit at index 1 is on if the `index`th bit of `scalar_v` is on.
          Examples:
-            - compute_bitpair(0, 1, 1) == 3
-            - compute_bitpair(0, 1, 0) == 1
-            - compute_bitpair(0, 0, 1) == 2
+            - compute_bitpair(0, 1, 1) == 3,
+            - compute_bitpair(0, 1, 0) == 1,
+            - compute_bitpair(0, 0, 1) == 2.
     """
     return (((scalar_v >> index) & 1) << 1) + ((scalar_u >> index) & 1)
 
@@ -261,27 +269,41 @@ def _ec_zz_dadd_affine(x1: uint256, y1: uint256, zz1: uint256, zzz1: uint256, x2
     zz3: uint256 = empty(uint256)
     zzz3: uint256 = empty(uint256)
 
+    # `(X2, Y2)` is point at infinity.
     if (self._ec_aff_is_inf(x2, y2)):
-        if (self._ec_aff_is_inf(zz1, zzz1)):
+        if (self._ec_zz_is_inf(zz1, zzz1)):
             return self._ec_zz_point_at_inf()
         else:
             return (x1, y1, zz1, zzz1)
+    # `(X1, Y1)` is point at infinity.
     elif (self._ec_zz_is_inf(zz1, zzz1)):
         return (x2, y2, 1, 1)
 
+    # R = S2 - y1 = y2*zzz1 - y1.
     comp_r: uint256 = uint256_addmod(uint256_mulmod(y2, zzz1, p), p - y1, p)
+    # P = U2 - x1 = x2*zz1 - x1.
     comp_p: uint256 = uint256_addmod(uint256_mulmod(x2, zz1, p), p - x1, p)
 
+    # X1 != X2.
     if (comp_p != empty(uint256)):
+        # PP = P^2.
         comp_pp: uint256 = uint256_mulmod(comp_p, comp_p, p)
+        # PPP = P*PP.
         comp_ppp: uint256 = uint256_mulmod(comp_pp, comp_p, p)
+        # ZZ3 = ZZ1*PP.
         zz3 = uint256_mulmod(zz1, comp_pp, p)
+        # ZZZ3 = ZZZ1*PPP.
         zzz3 = uint256_mulmod(zzz1, comp_ppp, p)
+        # Q = X1*PP.
         comp_q: uint256 = uint256_mulmod(x1, comp_pp, p)
+        # R^2 - PPP - 2*Q
         x3 = uint256_addmod(uint256_addmod(uint256_mulmod(comp_r, comp_r, p), p - comp_ppp, p), uint256_mulmod(minus_2modp, comp_q, p), p)
+        # Y3 = R*(Q-x3) - y1*PPP.
         return(x3, uint256_addmod(uint256_mulmod(uint256_addmod(comp_q, p - x3, p), comp_r, p), uint256_mulmod(p - y1, comp_ppp, p), p), zz3, zzz3)
+    # X1 == X2 and Y1 == Y2.
     elif (comp_p == empty(uint256)):
         return self._ec_zz_double_affine(x2, y2)
+    # X1 == X2 and Y1 == -Y2.
     else:
         return self._ec_zz_point_at_inf()
 
@@ -298,13 +320,20 @@ def _ec_zz_double_zz(x1: uint256, y1: uint256, zz1: uint256, zzz1: uint256) -> (
     if (self._ec_zz_is_inf(zz1, zzz1)):
         return self._ec_zz_point_at_inf()
 
+    # U = 2*Y1.
     comp_u: uint256 = uint256_mulmod(2, y1, p)
+    # V = U^2.
     comp_v: uint256 = uint256_mulmod(comp_u, comp_u, p)
+    # W = U*V.
     comp_w: uint256 = uint256_mulmod(comp_u, comp_v, p)
+    # S = X1*V.
     comp_s: uint256 = uint256_mulmod(x1, comp_v, p)
+    # M = 3*(X1)^2 + a*(zz1)^2.
     comp_m: uint256 = uint256_addmod(uint256_mulmod(3, uint256_mulmod(x1, x1, p), p), uint256_mulmod(a, uint256_mulmod(zz1, zz1, p), p), p)
 
+    # M^2 + (-2)*S.
     x3: uint256 = uint256_addmod(uint256_mulmod(comp_m, comp_m, p), uint256_mulmod(minus_2modp, comp_s, p), p)
+    # Y3 = M*(S+(-X3)) + (-W)*Y1, ZZ3 = V*ZZ1, ZZZ3 = W*ZZZ1.
     return (x3, uint256_addmod(uint256_mulmod(comp_m, uint256_addmod(comp_s, p - x3, p), p), uint256_mulmod(p - comp_w, y1, p), p), uint256_mulmod(comp_v, zz1, p), uint256_mulmod(comp_w, zzz1, p))
 
 
@@ -318,13 +347,20 @@ def _ec_zz_double_affine(x1: uint256, y1: uint256) -> (uint256, uint256, uint256
     if (self._ec_aff_is_inf(x1, y1)):
         return self._ec_zz_point_at_inf()
 
+    # U = 2*Y1.
     comp_u: uint256 = uint256_mulmod(2, y1, p)
+    # V = U^2 = zz3.
     zz3: uint256 = uint256_mulmod(comp_u, comp_u, p)
+    # W = U*V = zzz3.
     zzz3: uint256 = uint256_mulmod(comp_u, zz3, p)
+    # S = X1*V.
     comp_s: uint256 = uint256_mulmod(x1, zz3, p)
+    # M = 3*(X1)^2 + a.
     comp_m: uint256 = uint256_addmod(uint256_mulmod(3, uint256_mulmod(x1, x1, p), p), a, p)
 
+    # M^2 + (-2)*S.
     x3: uint256 = uint256_addmod(uint256_mulmod(comp_m, comp_m, p), uint256_mulmod(minus_2modp, comp_s, p), p)
+    # Y3 = M*(S+(-X3)) + (-W)*Y1.
     return (x3, uint256_addmod(uint256_mulmod(comp_m, uint256_addmod(comp_s, p - x3, p), p), uint256_mulmod(p - zzz3, y1, p), p), zz3, zzz3)
 
 
@@ -340,10 +376,14 @@ def _ec_zz_set_aff(x: uint256, y: uint256, zz: uint256, zzz: uint256) -> (uint25
     if (self._ec_zz_is_inf(zz, zzz)):
         return self._ec_affine_point_at_inf()
 
+    # 1 / zzz.
     zzz_inv: uint256 = self._p_mod_inv(zzz)
+    # 1 / z.
     z_inv: uint256 = uint256_mulmod(zz, zzz_inv, p)
+    # 1 / zz.
     zz_inv: uint256 = uint256_mulmod(z_inv, z_inv, p)
 
+    # X1 = X / zz, y = Y / zzz.
     return (uint256_mulmod(x, zz_inv, p), uint256_mulmod(y, zzz_inv, p))
 
 
