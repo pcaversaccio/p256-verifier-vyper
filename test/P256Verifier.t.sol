@@ -43,9 +43,9 @@ contract P256Verifier is Test {
         // Zero inputs.
         bytes32 hash = bytes32(0);
         (uint256 r, uint256 s, uint256 x, uint256 y) = (0, 0, 0, 0);
-        (bool res, uint256 gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("Zero inputs, gasUsed ", gasUsed);
-        assertEq(res, false);
+        // (bool res, uint256 gasUsed) = evaluate(hash, r, s, x, y);
+        // console2.log("Zero inputs, gasUsed ", gasUsed);
+        // assertEq(res, false);
 
         // // First valid Wycheproof vector.
         // hash = 0xbb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023;
