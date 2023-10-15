@@ -168,7 +168,7 @@ def _ec_zz_mulmuladd(QX: uint256, QY: uint256, scalar_u: uint256, scalar_v: uint
     TX: uint256 = empty(uint256)
     TY: uint256 = empty(uint256)
 
-    for _ in range(min(index, 255), bound=255):
+    for _ in range(255):
         if (index < empty(int256)):
             break
 
@@ -273,8 +273,7 @@ def _ec_zz_dadd_affine(x1: uint256, y1: uint256, zz1: uint256, zzz1: uint256, x2
     if (self._ec_aff_is_inf(x2, y2)):
         if (self._ec_zz_is_inf(zz1, zzz1)):
             return self._ec_zz_point_at_inf()
-        else:
-            return (x1, y1, zz1, zzz1)
+        return (x1, y1, zz1, zzz1)
     # `(X1, Y1)` is point at infinity.
     elif (self._ec_zz_is_inf(zz1, zzz1)):
         return (x2, y2, 1, 1)
@@ -301,7 +300,7 @@ def _ec_zz_dadd_affine(x1: uint256, y1: uint256, zz1: uint256, zzz1: uint256, x2
         # Y3 = R*(Q-x3) - y1*PPP.
         return(x3, uint256_addmod(uint256_mulmod(uint256_addmod(comp_q, p - x3, p), comp_r, p), uint256_mulmod(p - y1, comp_ppp, p), p), zz3, zzz3)
     # X1 == X2 and Y1 == Y2.
-    elif (comp_p == empty(uint256)):
+    elif (comp_r == empty(uint256)):
         return self._ec_zz_double_affine(x2, y2)
     # X1 == X2 and Y1 == -Y2.
     else:

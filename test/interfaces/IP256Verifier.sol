@@ -1,4 +1,4 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.21;
 
-interface IP256 {}
+interface IP256Verifier {}

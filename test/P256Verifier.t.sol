@@ -5,21 +5,21 @@ import {Test, console2} from "forge-std/Test.sol";
 import {stdJson} from "forge-std/StdJson.sol";
 import {VyperDeployer} from "vyper-deployer/VyperDeployer.sol";
 
-import {IP256} from "./interfaces/IP256.sol";
+import {IP256Verifier} from "./interfaces/IP256Verifier.sol";
 
-contract P256 is Test {
+contract P256Verifier is Test {
     using stdJson for string;
 
     VyperDeployer private vyperDeployer = new VyperDeployer();
-    IP256 private p256;
+    IP256Verifier private p256Verifier;
 
     function setUp() public {
-        p256 = IP256(vyperDeployer.deployContract("src/", "P256"));
+        p256Verifier = IP256Verifier(vyperDeployer.deployContract("src/", "P256Verifier"));
     }
-    /**
-     * Checks a single test vector: signature rs, pubkey Q = (x,y).
-     */
 
+    /**
+     * @dev Checks a single test vector: signature rs, pubkey Q = (x,y).
+     */
     function evaluate(bytes32 hash, uint256 r, uint256 s, uint256 x, uint256 y)
         private
         returns (bool valid, uint256 gasUsed)
@@ -27,7 +27,7 @@ contract P256 is Test {
         bytes memory input = abi.encodePacked(hash, r, s, x, y);
 
         uint256 gasBefore = gasleft();
-        (bool success, bytes memory res) = address(p256).staticcall(input);
+        (bool success, bytes memory res) = address(p256Verifier).staticcall(input);
         gasUsed = gasBefore - gasleft();
 
         assertEq(success, true, "call failed");
@@ -38,16 +38,18 @@ contract P256 is Test {
         return (result == 1, gasUsed);
     }
 
-    // Sanity check. Demonstrate input and output handling.
+    /**
+     * @dev Sanity check. Demonstrate input and output handling.
+     */
     function testBasic() public {
-        // Zero inputs
+        // Zero inputs.
         bytes32 hash = bytes32(0);
         (uint256 r, uint256 s, uint256 x, uint256 y) = (0, 0, 0, 0);
         (bool res, uint256 gasUsed) = evaluate(hash, r, s, x, y);
         console2.log("Zero inputs, gasUsed ", gasUsed);
         assertEq(res, false);
 
-        // First valid Wycheproof vector
+        // First valid Wycheproof vector.
         hash = 0xbb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023;
         r = 19738613187745101558623338726804762177711919211234071563652772152683725073944;
         s = 34753961278895633991577816754222591531863837041401341770838584739693604822390;
@@ -57,66 +59,68 @@ contract P256 is Test {
         console2.log("Valid signature, gasUsed ", gasUsed);
         assertEq(res, true);
 
-        // Same as above, but off by 1
+        // Same as above, but off by 1.
         (res, gasUsed) = evaluate(hash, r, s, x + 1, y);
         console2.log("Invalid signature, gasUsed ", gasUsed);
         assertEq(res, false);
     }
 
-    // This is the most comprehensive test, covering many edge cases. See vector
-    // generation and validation in the test-vectors directory.
-    // function testWycheproof() public {
-    //     string memory file = "./lib/p256-verifier/test-vectors/vectors_wycheproof.jsonl";
-    //     while (true) {
-    //         string memory vector = vm.readLine(file);
-    //         if (bytes(vector).length == 0) {
-    //             break;
-    //         }
+    /**
+     * @dev This is the most comprehensive test, covering many edge cases. See vector
+     * generation and validation in the test-vectors directory.
+     */
+    function testWycheproof() public {
+        string memory file = "./lib/p256-verifier/test-vectors/vectors_wycheproof.jsonl";
+        while (true) {
+            string memory vector = vm.readLine(file);
+            if (bytes(vector).length == 0) {
+                break;
+            }
 
-    //         uint256 x = uint256(vector.readBytes32(".x"));
-    //         uint256 y = uint256(vector.readBytes32(".y"));
-    //         uint256 r = uint256(vector.readBytes32(".r"));
-    //         uint256 s = uint256(vector.readBytes32(".s"));
-    //         bytes32 hash = vector.readBytes32(".hash");
-    //         bool expected = vector.readBool(".valid");
-    //         string memory comment = vector.readString(".comment");
+            uint256 x = uint256(vector.readBytes32(".x"));
+            uint256 y = uint256(vector.readBytes32(".y"));
+            uint256 r = uint256(vector.readBytes32(".r"));
+            uint256 s = uint256(vector.readBytes32(".s"));
+            bytes32 hash = vector.readBytes32(".hash");
+            bool expected = vector.readBool(".valid");
+            string memory comment = vector.readString(".comment");
 
-    //         (bool result,) = evaluate(hash, r, s, x, y);
+            (bool result,) = evaluate(hash, r, s, x, y);
 
-    //         string memory err = string(
-    //             abi.encodePacked("exp ", expected ? "1" : "0", ", we return ", result ? "1" : "0", ": ", comment)
-    //         );
-    //         assertTrue(result == expected, err);
-    //     }
-    // }
+            string memory err = string(
+                abi.encodePacked("exp ", expected ? "1" : "0", ", we return ", result ? "1" : "0", ": ", comment)
+            );
+            assertTrue(result == expected, err);
+        }
+    }
 
     function testWrongInputLength() public {
-        // First valid Wycheproof vector
+        // First valid Wycheproof vector.
         bytes32 hash = 0xbb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023;
         uint256 r = 19738613187745101558623338726804762177711919211234071563652772152683725073944;
         uint256 s = 34753961278895633991577816754222591531863837041401341770838584739693604822390;
         uint256 x = 18614955573315897657680976650685450080931919913269223958732452353593824192568;
         uint256 y = 90223116347859880166570198725387569567414254547569925327988539833150573990206;
         bytes memory input = abi.encodePacked(hash, r, s, x, y);
-        (bool success, bytes memory result) = address(p256).call(input);
+        (bool success, bytes memory result) = address(p256Verifier).call(input);
         bytes32 res = abi.decode(result, (bytes32));
         assertTrue(success && res == bytes32(uint256(1)), "expected valid");
 
-        // Append a trailing byte
+        // Append a trailing byte.
         input = abi.encodePacked(input, uint8(0));
-        (success, result) = address(p256).call(input);
+        (success, result) = address(p256Verifier).call(input);
         res = abi.decode(result, (bytes32));
         assertTrue(success && res == bytes32(uint256(0)), "expected invalid");
     }
 
     function testOutOfBounds() public {
-        // Curve prime field modulus
+        // Curve prime field modulus.
         uint256 p = 0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF;
 
         bytes32 hash = bytes32(0);
         (uint256 r, uint256 s, uint256 x, uint256 y) = (1, 1, 1, 1);
 
-        // In-bounds dummy key (1, 1)
+        // In-bounds dummy key (1, 1).
         // Calls modexp, which takes gas.
         (bool result, uint256 gasUsed) = evaluate(hash, r, s, x, y);
         console2.log("gasUsed ", gasUsed);
