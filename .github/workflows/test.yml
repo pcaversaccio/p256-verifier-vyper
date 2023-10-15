@@ -13,12 +13,25 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
+        architecture:
+          - x64
+        python-version:
+          - 3.11
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+
+      - name: Install Vyper
+        run: pip install vyper
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
