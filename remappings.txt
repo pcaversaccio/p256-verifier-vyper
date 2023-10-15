@@ -1,2 +1,2 @@
 forge-std/=lib/forge-std/src/
-vyper-deployer=lib/snekmate/lib/utils
+vyper-deployer=lib/snekmate/lib/utils/
