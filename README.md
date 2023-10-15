@@ -11,3 +11,5 @@ P256 (a.k.a. secp256r1 elliptic curve) signature verification 🐍Vyper contract
 - https://daimo.xyz/blog/p256verifier
 - https://p256.eth.limo
 - https://etherscan.io/address/0xc2b78104907F722DABAc4C69f826a522B2754De4
+
+![image](https://github.com/pcaversaccio/p256-verifier-vyper/assets/25297591/62178250-58e7-4c27-9c1e-1f92f401dbc0)
