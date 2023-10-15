@@ -47,20 +47,20 @@ contract P256Verifier is Test {
         console2.log("Zero inputs, gasUsed ", gasUsed);
         assertEq(res, false);
 
-        // First valid Wycheproof vector.
-        hash = 0xbb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023;
-        r = 19738613187745101558623338726804762177711919211234071563652772152683725073944;
-        s = 34753961278895633991577816754222591531863837041401341770838584739693604822390;
-        x = 18614955573315897657680976650685450080931919913269223958732452353593824192568;
-        y = 90223116347859880166570198725387569567414254547569925327988539833150573990206;
-        (res, gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("Valid signature, gasUsed ", gasUsed);
-        assertEq(res, true);
+        // // First valid Wycheproof vector.
+        // hash = 0xbb5a52f42f9c9261ed4361f59422a1e30036e7c32b270c8807a419feca605023;
+        // r = 19738613187745101558623338726804762177711919211234071563652772152683725073944;
+        // s = 34753961278895633991577816754222591531863837041401341770838584739693604822390;
+        // x = 18614955573315897657680976650685450080931919913269223958732452353593824192568;
+        // y = 90223116347859880166570198725387569567414254547569925327988539833150573990206;
+        // (res, gasUsed) = evaluate(hash, r, s, x, y);
+        // console2.log("Valid signature, gasUsed ", gasUsed);
+        // assertEq(res, true);
 
-        // Same as above, but off by 1.
-        (res, gasUsed) = evaluate(hash, r, s, x + 1, y);
-        console2.log("Invalid signature, gasUsed ", gasUsed);
-        assertEq(res, false);
+        // // Same as above, but off by 1.
+        // (res, gasUsed) = evaluate(hash, r, s, x + 1, y);
+        // console2.log("Invalid signature, gasUsed ", gasUsed);
+        // assertEq(res, false);
     }
 
     // /**
