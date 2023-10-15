@@ -127,7 +127,7 @@ def _ec_aff_satisfies_curve_eqn(x: uint256, y: uint256) -> bool:
 def _ec_zz_mulmuladd(QX: uint256, QY: uint256, scalar_u: uint256, scalar_v: uint256) -> uint256:
     """
     @dev Compute of "uG + vQ" using Strauss-Shamir's trick. Strauss-Shamir is
-         described well in https://stackoverflow.com/a/50994362.
+         described well in https://stackoverflow.com/questions/50993471/ec-scalar-multiplication-with-strauss-shamir-method/50994362#50994362.
     """
     zz: uint256 = 1
     zzz: uint256 = 1
