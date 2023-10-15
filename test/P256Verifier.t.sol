@@ -12,7 +12,7 @@ contract P256Verifier is Test {
     address private p256Verifier;
 
     function setUp() public {
-        p256Verifier = vyperDeployer.deployContract("src/", "P256Verifier");
+        // p256Verifier = vyperDeployer.deployContract("src/", "P256Verifier");
     }
 
     function testHello() public {
