@@ -3,18 +3,16 @@ pragma solidity ^0.8.21;
 
 import {Test, console2} from "forge-std/Test.sol";
 import {stdJson} from "forge-std/StdJson.sol";
-import {VyperDeployer} from "vyper-deployer/VyperDeployer.sol";
-
-import {IP256Verifier} from "./interfaces/IP256Verifier.sol";
+import {VyperDeployer} from "lib/utils/VyperDeployer.sol";
 
 contract P256Verifier is Test {
     using stdJson for string;
 
     VyperDeployer private vyperDeployer = new VyperDeployer();
-    IP256Verifier private p256Verifier;
+    address private p256Verifier;
 
     function setUp() public {
-        p256Verifier = IP256Verifier(vyperDeployer.deployContract("src/", "P256Verifier"));
+        p256Verifier = vyperDeployer.deployContract("src/", "P256Verifier");
     }
 
     /**
@@ -27,7 +25,7 @@ contract P256Verifier is Test {
         bytes memory input = abi.encodePacked(hash, r, s, x, y);
 
         uint256 gasBefore = gasleft();
-        (bool success, bytes memory res) = address(p256Verifier).staticcall(input);
+        (bool success, bytes memory res) = p256Verifier.staticcall(input);
         gasUsed = gasBefore - gasleft();
 
         assertEq(success, true, "call failed");
@@ -102,13 +100,13 @@ contract P256Verifier is Test {
         uint256 x = 18614955573315897657680976650685450080931919913269223958732452353593824192568;
         uint256 y = 90223116347859880166570198725387569567414254547569925327988539833150573990206;
         bytes memory input = abi.encodePacked(hash, r, s, x, y);
-        (bool success, bytes memory result) = address(p256Verifier).call(input);
+        (bool success, bytes memory result) = p256Verifier.call(input);
         bytes32 res = abi.decode(result, (bytes32));
         assertTrue(success && res == bytes32(uint256(1)), "expected valid");
 
         // Append a trailing byte.
         input = abi.encodePacked(input, uint8(0));
-        (success, result) = address(p256Verifier).call(input);
+        (success, result) = p256Verifier.call(input);
         res = abi.decode(result, (bytes32));
         assertTrue(success && res == bytes32(uint256(0)), "expected invalid");
     }
