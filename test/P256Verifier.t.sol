@@ -8,12 +8,16 @@ import {VyperDeployer} from "vyper-deployer/VyperDeployer.sol";
 contract P256Verifier is Test {
     using stdJson for string;
 
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                      HELPER VARIABLES                      */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
     VyperDeployer private vyperDeployer = new VyperDeployer();
     address private p256Verifier;
 
-    function setUp() public {
-        p256Verifier = vyperDeployer.deployContract("src/", "P256Verifier");
-    }
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                      HELPER FUNCTIONS                      */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /**
      * @dev Checks a single test vector: signature rs, pubkey Q = (x,y).
@@ -35,6 +39,18 @@ contract P256Verifier is Test {
 
         return (result == 1, gasUsed);
     }
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                            SETUP                           */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
+
+    function setUp() public {
+        p256Verifier = vyperDeployer.deployContract("src/", "P256Verifier");
+    }
+
+    /*´:°•.°+.*•´.*:˚.°*.˚•´.°:°•.°•.*•´.*:˚.°*.˚•´.°:°•.°+.*•´.*:*/
+    /*                            TESTS                           */
+    /*.•°:°.´+˚.*°.˚:*.´•*.+°.•°:´*.´•*.•°.•°:°.´:•˚°.*°.˚:*.´+°.•*/
 
     /**
      * @dev Sanity check. Demonstrate input and output handling.
@@ -65,7 +81,7 @@ contract P256Verifier is Test {
 
     /**
      * @dev This is the most comprehensive test, covering many edge cases. See vector
-     * generation and validation in the test-vectors directory.
+     * generation and validation in Daimo's test-vectors directory: https://github.com/daimo-eth/p256-verifier/tree/master/test-vectors.
      */
     function testWycheproof() public {
         string memory file = "./lib/p256-verifier/test-vectors/vectors_wycheproof.jsonl";
