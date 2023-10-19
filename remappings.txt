@@ -1,2 +1,3 @@
 forge-std/=lib/forge-std/src/
 vyper-deployer=lib/snekmate/lib/utils/
+ds-test/=lib/forge-std/lib/ds-test/src/
