@@ -1,7 +1,7 @@
 # `P256Verifier` 🐍Vyper Contract
 
 [![🕵️‍♂️ Test smart contracts](https://github.com/pcaversaccio/p256-verifier-vyper/actions/workflows/test.yml/badge.svg)](https://github.com/pcaversaccio/p256-verifier-vyper/actions/workflows/test.yml)
-[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![License: AGPL-3.0-only](https://img.shields.io/badge/License-AGPL--3.0--only-blue)](https://www.gnu.org/licenses/agpl-3.0)
 
 <img src=https://github-production-user-asset-6210df.s3.amazonaws.com/25297591/275336509-62178250-58e7-4c27-9c1e-1f92f401dbc0.png width="650"/>
 
