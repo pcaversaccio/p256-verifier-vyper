@@ -18,6 +18,6 @@
 ## Further References
 
 - Daimo's GitHub Repository: [daimo-eth/p256-verifier](https://github.com/daimo-eth/p256-verifier)
-- Daimo's Blog: [blog/p256verifier](https://daimo.xyz/blog/p256verifier)
+- Daimo's Blog: [blog/p256verifier](https://daimo.com/blog/p256verifier)
 - Daimo's Website: [p256.eth.limo](https://p256.eth.limo)
 - Daimo's `P256Verifier` Deployment: [`0xc2b78104907F722DABAc4C69f826a522B2754De4`](https://etherscan.io/address/0xc2b78104907F722DABAc4C69f826a522B2754De4)
