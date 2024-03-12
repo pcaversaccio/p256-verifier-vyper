@@ -24,6 +24,7 @@ contract P256Verifier is Test {
      */
     function evaluate(bytes32 hash, uint256 r, uint256 s, uint256 x, uint256 y)
         private
+        view
         returns (bool valid, uint256 gasUsed)
     {
         bytes memory input = abi.encodePacked(hash, r, s, x, y);
