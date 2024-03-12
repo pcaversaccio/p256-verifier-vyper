@@ -56,7 +56,7 @@ contract P256Verifier is Test {
     /**
      * @dev Sanity check. Demonstrate input and output handling.
      */
-    function testBasic() public {
+    function testBasic() public view {
         // Zero inputs.
         bytes32 hash = bytes32(0);
         (uint256 r, uint256 s, uint256 x, uint256 y) = (0, 0, 0, 0);
@@ -84,7 +84,7 @@ contract P256Verifier is Test {
      * @dev This is the most comprehensive test, covering many edge cases. See vector
      * generation and validation in Daimo's test-vectors directory: https://github.com/daimo-eth/p256-verifier/tree/master/test-vectors.
      */
-    function testWycheproof() public {
+    function testWycheproof() public view {
         string memory file = "./lib/p256-verifier/test-vectors/vectors_wycheproof.jsonl";
         while (true) {
             string memory vector = vm.readLine(file);
@@ -128,7 +128,7 @@ contract P256Verifier is Test {
         assertTrue(success && res == bytes32(uint256(0)), "expected invalid");
     }
 
-    function testOutOfBounds() public {
+    function testOutOfBounds() public view {
         // Curve prime field modulus.
         uint256 p = 0xFFFFFFFF00000001000000000000000000000000FFFFFFFFFFFFFFFFFFFFFFFF;
 
