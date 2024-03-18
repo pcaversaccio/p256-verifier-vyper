@@ -1,4 +1,4 @@
-P256Verifier:testBasic() (gas: 661575)
+P256Verifier:testBasic() (gas: 661553)
 P256Verifier:testOutOfBounds() (gas: 49394)
-P256Verifier:testWrongInputLength() (gas: 646665)
-P256Verifier:testWycheproof() (gas: 422952585)
+P256Verifier:testWrongInputLength() (gas: 646643)
+P256Verifier:testWycheproof() (gas: 422952563)
