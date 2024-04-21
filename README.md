@@ -11,7 +11,6 @@
 
 ## Deployments
 
-- Goerli: [`0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5`](https://goerli.etherscan.io/address/0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5)
 - Sepolia: [`0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5`](https://sepolia.etherscan.io/address/0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5)
 - Holešky: [`0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5`](https://holesky.etherscan.io/address/0xD99D0f622506C2521cceb80B78CAeBE1798C7Ed5)
 
