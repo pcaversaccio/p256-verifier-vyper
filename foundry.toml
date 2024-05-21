@@ -1,15 +1,15 @@
 ## defaults for all profiles
 [profile.default]
-src = 'src'                                                 # the source directory
-test = 'test'                                               # the test directory
-out = 'out'                                                 # the output directory (for artifacts)
-libs = ['lib']                                              # a list of library directories
+src = "src"                                                 # the source directory
+test = "test"                                               # the test directory
+out = "out"                                                 # the output directory (for artifacts)
+libs = ["lib"]                                              # a list of library directories
 cache = true                                                # whether to cache builds or not
-cache_path = 'cache'                                        # where the cache is stored if enabled
+cache_path = "cache"                                        # where the cache is stored if enabled
 ffi = true                                                  # whether to enable foreign function interface (ffi) cheatcodes or not
 verbosity = 3                                               # the verbosity of tests
-fs_permissions = [{ access = "read-write", path = "./"}]    # set read-write access to project root
-evm_version = 'shanghai'                                    # set the EVM target version
+fs_permissions = [{ access = "read-write", path = "./" }]   # set read-write access to project root
+evm_version = "shanghai"                                    # set the EVM target version
 
 ## default overrides for the CI runs
 [profile.ci]
