@@ -31,7 +31,7 @@ jobs:
           architecture: ${{ matrix.architecture }}
 
       - name: Install Vyper
-        run: pip install vyper
+        run: pip install vyper==0.3.10
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
