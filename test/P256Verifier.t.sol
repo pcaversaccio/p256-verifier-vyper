@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 pragma solidity ^0.8.26;
 
-import {Test, console2} from "forge-std/Test.sol";
+import {Test, console} from "forge-std/Test.sol";
 import {stdJson} from "forge-std/StdJson.sol";
 import {VyperDeployer} from "vyper-deployer/VyperDeployer.sol";
 
@@ -61,7 +61,7 @@ contract P256Verifier is Test {
         bytes32 hash = bytes32(0);
         (uint256 r, uint256 s, uint256 x, uint256 y) = (0, 0, 0, 0);
         (bool res, uint256 gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("Zero inputs, gasUsed ", gasUsed);
+        console.log("Zero inputs, gasUsed ", gasUsed);
         assertEq(res, false);
 
         // First valid Wycheproof vector.
@@ -71,12 +71,12 @@ contract P256Verifier is Test {
         x = 18614955573315897657680976650685450080931919913269223958732452353593824192568;
         y = 90223116347859880166570198725387569567414254547569925327988539833150573990206;
         (res, gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("Valid signature, gasUsed ", gasUsed);
+        console.log("Valid signature, gasUsed ", gasUsed);
         assertEq(res, true);
 
         // Same as above, but off by 1.
         (res, gasUsed) = evaluate(hash, r, s, x + 1, y);
-        console2.log("Invalid signature, gasUsed ", gasUsed);
+        console.log("Invalid signature, gasUsed ", gasUsed);
         assertEq(res, false);
     }
 
@@ -138,39 +138,39 @@ contract P256Verifier is Test {
         // In-bounds dummy key (1, 1).
         // Calls modexp, which takes gas.
         (bool result, uint256 gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("gasUsed ", gasUsed);
+        console.log("gasUsed ", gasUsed);
         assertEq(result, false);
         assertGt(gasUsed, 2500);
 
         // Out-of-bounds public key. Fails fast, takes less gas.
         (x, y) = (0, 1);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("gasUsed ", gasUsed);
+        console.log("gasUsed ", gasUsed);
         assertEq(result, false);
         assertLt(gasUsed, 2500);
 
         (x, y) = (1, 0);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("gasUsed ", gasUsed);
+        console.log("gasUsed ", gasUsed);
         assertEq(result, false);
         assertLt(gasUsed, 2500);
 
         (x, y) = (1, p);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("gasUsed ", gasUsed);
+        console.log("gasUsed ", gasUsed);
         assertEq(result, false);
         assertLt(gasUsed, 2500);
 
         (x, y) = (p, 1);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("gasUsed ", gasUsed);
+        console.log("gasUsed ", gasUsed);
         assertEq(result, false);
         assertLt(gasUsed, 2500);
 
         // p-1 is in-bounds but point is not on curve.
         (x, y) = (p - 1, 1);
         (result, gasUsed) = evaluate(hash, r, s, x, y);
-        console2.log("gasUsed ", gasUsed);
+        console.log("gasUsed ", gasUsed);
         assertEq(result, false);
     }
 }
