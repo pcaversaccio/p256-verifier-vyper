@@ -8,7 +8,7 @@
 > [!TIP]
 > A fully optimised and thoroughly tested `P256` verifier using the latest Vyper version `0.4.0` is implemented in 🐍 snekmate: https://github.com/pcaversaccio/snekmate/pull/243.
 
-`P256` (a.k.a. `secp256r1` elliptic curve) signature verification [🐍Vyper contract](./src/P256Verifier.vy). These functions can be used to verify a `P256` signature. The implementation is inspired by [dcposch](https://github.com/dcposch)'s and [nalinbhardwaj](https://github.com/nalinbhardwaj)'s implementation [here](https://github.com/daimo-eth/p256-verifier/blob/master/src/P256Verifier.sol). Also, for more technical details, please refer to [EIP-7212](https://eips.ethereum.org/EIPS/eip-7212).
+`P256` (a.k.a. `secp256r1` elliptic curve) signature verification [🐍Vyper contract](./src/P256Verifier.vy). These functions can be used to verify a `P256` signature. The implementation is inspired by [dcposch](https://github.com/dcposch)'s and [nalinbhardwaj](https://github.com/nalinbhardwaj)'s implementation [here](https://github.com/daimo-eth/p256-verifier/blob/master/src/P256Verifier.sol). Also, for more technical details, please refer to [RIP-7212](https://github.com/ethereum/RIPs/blob/master/RIPS/rip-7212.md).
 
 > [!WARNING]
 > This is **experimental software** and is provided on an "as is" and "as available" basis. We **do not give any warranties** and **will not be liable for any losses** incurred through any use of this code base.
