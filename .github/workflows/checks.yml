@@ -37,6 +37,8 @@ jobs:
 
       - name: Prettify Solidity files
         run: forge fmt --check
+        env:
+          FOUNDRY_DISABLE_NIGHTLY_WARNING: "1"
 
   codespell:
     runs-on: ${{ matrix.os }}
@@ -62,7 +64,7 @@ jobs:
         os:
           - ubuntu-latest
         ruby_version:
-          - 3.3
+          - 3.4
 
     steps:
       - name: Checkout
