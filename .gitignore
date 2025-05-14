@@ -1,3 +1,8 @@
 # Compiler files
 cache
 out
+
+# Python virtual environments
+env
+venv
+

@@ -9,7 +9,7 @@ cache_path = "cache"                                        # where the cache is
 ffi = true                                                  # whether to enable foreign function interface (ffi) cheatcodes or not
 verbosity = 3                                               # the verbosity of tests
 fs_permissions = [{ access = "read-write", path = "./" }]   # set read-write access to project root
-solc_version = "0.8.29"                                     # override for the solc version
+solc_version = "0.8.30"                                     # override for the solc version
 evm_version = "shanghai"                                    # set the EVM target version
 optimizer = true                                            # enable the solc optimiser
 optimizer_runs = 999_999                                    # the number of optimiser runs
