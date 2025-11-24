@@ -2,7 +2,7 @@
   "lib/forge-std": {
     "branch": {
       "name": "master",
-      "rev": "3f999523613ab5454a5c4ae4abeaa8ea2ba7bcae"
+      "rev": "24d76395806bf34aaab7ce0291094174631487f6"
     }
   },
   "lib/p256-verifier": {
@@ -14,7 +14,7 @@
   "lib/snekmate": {
     "branch": {
       "name": "main",
-      "rev": "0e68cb2a8aef7125ac05218eb98248660ad57b54"
+      "rev": "df77c600b5f0ddc3be5b534f4605d02aee4480f0"
     }
   }
 }
