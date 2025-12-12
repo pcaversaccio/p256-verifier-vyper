@@ -1,20 +1,21 @@
 ## defaults for all profiles
 [profile.default]
-src = "src"                                                 # the source directory
-test = "test"                                               # the test directory
-out = "out"                                                 # the output directory (for artifacts)
-libs = ["lib"]                                              # a list of library directories
-cache = true                                                # whether to cache builds or not
-cache_path = "cache"                                        # where the cache is stored if enabled
-ffi = true                                                  # whether to enable foreign function interface (ffi) cheatcodes or not
-verbosity = 3                                               # the verbosity of tests
-fs_permissions = [{ access = "read-write", path = "./" }]   # set read-write access to project root
-solc_version = "0.8.30"                                     # override for the solc version
-evm_version = "shanghai"                                    # set the EVM target version
-optimizer = true                                            # enable the solc optimiser
-optimizer_runs = 999_999                                    # the number of optimiser runs
+src = "src"                                               # the source directory
+test = "test"                                             # the test directory
+out = "out"                                               # the output directory (for artifacts)
+libs = ["lib"]                                            # a list of library directories
+cache = true                                              # whether to cache builds or not
+cache_path = "cache"                                      # where the cache is stored if enabled
+ffi = true                                                # whether to enable foreign function interface (ffi) cheatcodes or not
+verbosity = 3                                             # the verbosity of tests
+fs_permissions = [{ access = "read-write", path = "./" }] # set read-write access to project root
+solc_version = "0.8.31"                                   # override for the solc version
+ignored_error_codes = [2_424, 4_591]                      # ignore the deprecated `memory-safe-assembly` warning and the warning about too many warnings
+evm_version = "shanghai"                                  # set the EVM target version
+optimizer = true                                          # enable the solc optimiser
+optimizer_runs = 999_999                                  # the number of optimiser runs
 
 ## default overrides for the CI runs
 [profile.ci]
-force = true                                                # always perform a clean build
-verbosity = 4                                               # increase the verbosity of tests
+force = true                                              # always perform a clean build
+verbosity = 4                                             # increase the verbosity of tests
