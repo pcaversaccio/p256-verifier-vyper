@@ -14,7 +14,7 @@
   "lib/snekmate": {
     "branch": {
       "name": "main",
-      "rev": "9df305df927fcf3c6f058b924ea933135f1d53bc"
+      "rev": "c81a01d7cfbd4032a42ea64053a2028df4ff2e64"
     }
   }
 }
