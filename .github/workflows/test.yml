@@ -39,7 +39,7 @@ jobs:
           version: nightly
 
       - name: Foundry tests
-        run: forge test
+        run: forge test --no-isolate
         env:
           FOUNDRY_PROFILE: ci
           FOUNDRY_DISABLE_NIGHTLY_WARNING: "1"
